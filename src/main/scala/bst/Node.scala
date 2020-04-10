@@ -23,10 +23,4 @@ class Node(val data: Int) {
     case node if node.right.nonEmpty && node.data < data => contains(data, node.right.head)
     case _ => None
   }
-
-  private def findBottom(data: Int, bst: Node = this): Node = bst match {
-    case node if node.left.isEmpty || node.right.isEmpty => node
-    case node if node.left.nonEmpty && node.data >= data => findBottom(data, node.left.head)
-    case node if node.right.nonEmpty && node.data < data => findBottom(data, node.right.head)
-  }
 }
