@@ -32,8 +32,7 @@ class LinkedList[T] {
     getAt(nodeCount - 1)
   }
 
-  def clear(): Unit = {
-    nodeCount = 0
+  def clear(): Unit = clearNodeCount { _ =>
     head = null
   }
 
@@ -61,7 +60,7 @@ class LinkedList[T] {
       last.setNext(newNode)
     }
 
-    incNodeCount(_ => {})
+    incNodeCount()
   }
 
   def getAt(index: Int): Node[T] = getAt(index, head)
@@ -74,15 +73,26 @@ class LinkedList[T] {
       getAt(index - 1, node.getNext)
   }
 
+  private def incNodeCount(): Unit = incNodeCount(_ => {})
+
   private def incNodeCount(continue: Int => AnyVal): Unit = {
     nodeCount = nodeCount + 1
     continue(nodeCount)
   }
 
-  private def decNodeCount(continue: Int => AnyVal): Unit = {
+  private def decNodeCount(): Unit = decNodeCount(_ => {})
+
+  private def decNodeCount(continue: Int => AnyVal = _ => {}): Unit = {
     if (nodeCount > 0) {
       nodeCount = nodeCount - 1
     }
+    continue(nodeCount)
+  }
+
+  private def clearNodeCount(): Unit = clearNodeCount(_ => {})
+
+  private def clearNodeCount(continue: Int => AnyVal): Unit =  {
+    nodeCount = 0
     continue(nodeCount)
   }
 }
