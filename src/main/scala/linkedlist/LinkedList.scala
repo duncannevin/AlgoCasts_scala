@@ -27,7 +27,10 @@ class LinkedList[T] {
 
   def getFirst: Node[T] = head
 
-  def getLast: Node[T] = getAt(nodeCount - 1)
+  def getLast: Node[T] = {
+    if (head == null || head.getNext == null) return head
+    getAt(nodeCount - 1)
+  }
 
   def clear(): Unit = {
     nodeCount = 0
@@ -41,13 +44,24 @@ class LinkedList[T] {
   }
 
   def removeLast(): Unit = decNodeCount { _ =>
-    if (head == null || size() == 1) {
-      return head = null
-    }
+    if (head == null || size() == 1) return head = null
 
     val newLast = getAt(size() - 2)
 
     newLast.setNext(null)
+  }
+
+  def insertLast(data: T): Unit = {
+    val newNode = new Node[T](data)
+
+    if (head == null) {
+      head = newNode
+    } else {
+      val last = getLast
+      last.setNext(newNode)
+    }
+
+    incNodeCount(_ => {})
   }
 
   def getAt(index: Int): Node[T] = getAt(index, head)
@@ -55,12 +69,9 @@ class LinkedList[T] {
   @scala.annotation.tailrec
   private def getAt(index: Int, node: Node[T]): Node[T] = index match {
     case 0 => node
+    case ind if ind < 0 => null
     case _ =>
-      if (node == null) {
-        node
-      } else {
-        getAt(index - 1, node.getNext)
-      }
+      getAt(index - 1, node.getNext)
   }
 
   private def incNodeCount(continue: Int => AnyVal): Unit = {

@@ -156,4 +156,48 @@ class LinkedListSpec extends AnyFlatSpec with Matchers {
     assert(ll.getLast.data == 'c')
     assert(ll.size == 1)
   }
+
+  "Insert Last" should "insert when list is empty" in {
+    val ll = new LinkedList[Char]
+    ll.insertLast('a')
+
+    assert(ll.getFirst.data == 'a')
+  }
+
+  "Insert Last" should "insert when list has a length of one" in {
+    val ll = new LinkedList[Char]
+    ll.insertLast('a')
+    ll.insertLast('b')
+
+    assert(ll.getLast.data == 'b')
+  }
+
+  "Insert Last" should "insert an element at the end of the list" in {
+    val ll = new LinkedList[Char]
+    ll.insertFirst('a')
+    ll.insertFirst('b')
+
+    assert(ll.size == 2)
+
+    ll.insertLast('2')
+
+    assert(ll.size == 3)
+    assert(ll.getLast.data == '2')
+  }
+
+  "Get At" should "return the node at a given index" in {
+    val ll = new LinkedList[Int]
+
+    assert(ll.getAt(0) == null)
+
+    ll.insertLast(1)
+    ll.insertLast(2)
+    ll.insertLast(3)
+    ll.insertLast(4)
+
+    assert(ll.getAt(0).data == 1)
+    assert(ll.getAt(1).data == 2)
+    assert(ll.getAt(2).data == 3)
+    assert(ll.getAt(3).data == 4)
+  }
 }
