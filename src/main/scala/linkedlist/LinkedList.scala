@@ -43,11 +43,12 @@ class LinkedList[T] {
   }
 
   def removeLast(): Unit = decNodeCount { _ =>
-    if (head == null || size() == 1) return head = null
-
-    val newLast = getAt(size() - 2)
-
-    newLast.setNext(null)
+    if (head == null || size() == 1) {
+      head = null
+    } else {
+      val newLast = getAt(size() - 2)
+      newLast.setNext(null)
+    }
   }
 
   def insertLast(data: T): Unit = {
