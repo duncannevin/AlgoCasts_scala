@@ -1,99 +1,52 @@
 package linkedlist
 
-class LinkedList[T] {
-  private var head: Node[T] = _
-  private var nodeCount: Int = 0
+trait LinkedListImpl[T] {
+  def insertFirst(data: T): LinkedList[T]
+  def size: Int
+  def head: Node[T]
+  def last: Node[T]
+  def clear: LinkedList[T]
+  def tail: LinkedList[T]
+  def init: LinkedList[T]
+  def push(data: T): LinkedList[T]
+  def getAt(index: Int): Node[T]
+}
 
-  def insertFirst(data: T): Unit = incNodeCount { _ => {
-      head match {
-        case null =>
-          head = new Node[T](data)
-        case _ =>
-          val newNode = new Node[T](data)
-          newNode.setNext(head)
-          head = newNode
-      }
+class LinkedList[T](private val src: Node[T] = null) extends LinkedListImpl[T] {
+
+  def insertFirst(data: T): LinkedList[T] = new LinkedList[T](
+    src match {
+      case null => Node(data, null)
+      case node: Node[T] => Node(data, node)
     }
-  }
+  )
 
-  def size: Int = nodeCount
-
-  // Slow implementation, replaced by tracking size when items are added and removed
+  def size: Int = size()
   @scala.annotation.tailrec
-  private def size(count: Int = 0, node: Node[T] = head): Int = node match {
+  private def size(count: Int = 0, node: Node[T] = src): Int = node match {
     case null => count
-    case n => size(count + 1, n.getNext)
+    case Node(_, next) => size(count + 1, next)
   }
 
-  def getFirst: Node[T] = head
+  def head: Node[T] = src
 
-  def getLast: Node[T] = {
-    if (head == null || head.getNext == null) return head
-    getAt(nodeCount - 1)
-  }
-
-  def clear(): Unit = clearNodeCount { _ =>
-    head = null
-  }
-
-  def removeFirst(): Unit = decNodeCount { _ => {
-      val newFirst = head.getNext
-      head = newFirst
-    }
-  }
-
-  def removeLast(): Unit = decNodeCount { _ =>
-    if (head == null || size() == 1) {
-      head = null
-    } else {
-      val newLast = getAt(size() - 2)
-      newLast.setNext(null)
-    }
-  }
-
-  def insertLast(data: T): Unit = {
-    val newNode = new Node[T](data)
-
-    if (head == null) {
-      head = newNode
-    } else {
-      val last = getLast
-      last.setNext(newNode)
-    }
-
-    incNodeCount()
-  }
-
-  def getAt(index: Int): Node[T] = getAt(index, head)
-
+  def last: Node[T] = last()
   @scala.annotation.tailrec
-  private def getAt(index: Int, node: Node[T]): Node[T] = index match {
-    case 0 => node
-    case ind if ind < 0 => null
-    case _ =>
-      getAt(index - 1, node.getNext)
+  private def last(node: Node[T] = src): Node[T] = node.next match {
+    case null => node
+    case _ => last(node.next)
   }
 
-  private def incNodeCount(): Unit = incNodeCount(_ => {})
+  def clear: LinkedList[T] = new LinkedList[T]
 
-  private def incNodeCount(continue: Int => AnyVal): Unit = {
-    nodeCount = nodeCount + 1
-    continue(nodeCount)
+  def tail: LinkedList[T] = head match {
+    case null => this
+    case Node(_, next) => new LinkedList[T](next)
   }
 
-  private def decNodeCount(): Unit = decNodeCount(_ => {})
+  def init: LinkedList[T] = ???
 
-  private def decNodeCount(continue: Int => AnyVal = _ => {}): Unit = {
-    if (nodeCount > 0) {
-      nodeCount = nodeCount - 1
-    }
-    continue(nodeCount)
-  }
+  def push(data: T): LinkedList[T] = ???
 
-  private def clearNodeCount(): Unit = clearNodeCount(_ => {})
-
-  private def clearNodeCount(continue: Int => AnyVal): Unit =  {
-    nodeCount = 0
-    continue(nodeCount)
-  }
+  def getAt(index: Int): Node[T] = ???
 }
