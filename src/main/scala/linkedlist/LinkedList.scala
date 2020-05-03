@@ -80,13 +80,13 @@ class NonEmptyLinkedList[T](head: NonEmptyNode[T]) extends LinkedList[T] {
 object LinkedList {
   def apply[A](items: A*): LinkedList[A] = {
 
-    makeInitial(items.toList, new EmptyLinkedList[A])
+    makeInitial(items.toSeq, new EmptyLinkedList[A])
   }
 
   @tailrec
-  def makeInitial[A](data: List[A], ll: LinkedList[A]): LinkedList[A] = data match {
-    case Nil => ll
-    case head::tail => makeInitial(tail, ll.push(head))
+  def makeInitial[A](data: Seq[A], ll: LinkedList[A]): LinkedList[A] = data match {
+    case Seq() => ll
+    case head+:tail => makeInitial(tail, ll.push(head))
   }
 }
 
@@ -103,5 +103,5 @@ object Scratch extends App {
   println(foo3.tail)
   println(foo3.init)
   println(foo3.clear.insertFirst(333).first)
-  println(foo3.getAt(-1))
+//  println(foo3.getAt(-1))
 }
