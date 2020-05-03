@@ -15,11 +15,13 @@ object Price {
   )
 
   def apply(date: String, host: String, upc: String) = {
-
     val lines = priceData.split("\n").filter(_.nonEmpty)
+
     val groupedContent = lines.tail
         .map(_.split(","))
-        .groupBy { case Array(date, host, upc, _, _) => (date, host, upc) }
+        .groupBy {
+          case Array(date, host, upc, _, _) => (date, host, upc)
+        }
         .map(value => value._1 -> value._2.sortBy {
           case Array(d, _, _, _, _) =>
             val df = DateTimeFormatter.ofPattern("yyyy-MM-dd")
